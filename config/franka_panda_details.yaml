@@ -70,3 +70,12 @@ robot_config:
             panda_joint5: 12 # Nm
             panda_joint6: 12 # Nm
             panda_joint7: 12 # Nm            
+
+gripper_config:
+  joint_names:
+    - panda_finger_joint1
+    - panda_finger_joint2
+  default_speed: 0.1  # [m/s]
+  default_grasp_epsilon:
+    inner: 0.005 # [m]
+    outer: 0.005 # [m]

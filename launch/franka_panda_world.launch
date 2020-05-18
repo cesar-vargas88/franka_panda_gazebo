@@ -1,0 +1,57 @@
+<launch>
+
+    <!-- roslaunch arguments -->
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="recording" default="false"/>
+    <arg name="debug" default="false"/>
+    <arg name="verbose" default="false"/>
+
+    <!-- This argument dictates whether gazebo should be launched in this file -->
+    <arg name="load_gazebo" default="true"/>
+    <!-- This argument fixes the robot statically to the world -->
+    <arg name="static" default="true"/>
+    <!-- This argument sets the initial joint states -->
+    <arg name="initial_joint_states"
+        default=   "-J panda::panda_joint1 0.000
+                    -J panda::panda_joint2 -0.785
+                    -J panda::panda_joint3 0.0
+                    -J panda::panda_joint4 -2.356
+                    -J panda::panda_joint5 0.0
+                    -J panda::panda_joint6 1.57
+                    -J panda::panda_joint7 0.785"/>
+
+    <!-- We resume the logic in empty_world.launch, changing the name of the world to be launched -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+
+        <arg name="world_name" value="$(find franka_panda_gazebo)/worlds/franka_panda.world"/>
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="recording" value="$(arg recording)"/>
+        <arg name="debug" value="$(arg debug)"/>
+        <arg name="verbose" value="$(arg verbose)"/>
+
+    </include>
+
+    <!-- Load joint details configurations from YAML file to parameter server --> 
+    <rosparam command="load" file="$(find franka_panda_gazebo)/config/franka_panda_details.yaml"/>
+
+    <!-- Load the URDF into the ROS Parameter Server -->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find franka_panda_description)/robots/panda_arm_hand.urdf.xacro load_gazebo:=$(arg load_gazebo)"/>
+    <!--param name="/arm/root_name" value="panda_link0"/-->
+
+    <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+    <node name="robot_description" 
+        pkg="gazebo_ros" 
+        type="spawn_model" 
+        args="-param robot_description -urdf -model franka_panda $(arg initial_joint_states)"/>
+
+    <!-- create a tf with base frame as 'base' (to match aml_robot) -->
+    <!--node pkg="tf" type="static_transform_publisher" name="base_to_link0" args="0 0 0 0 0 0 1 base panda_link0 100" /-->
+
+    <!-- ros_control franka_panda_control launch file -->
+    <include file="$(find franka_panda_control)/launch/franka_panda_control.launch" /> 
+
+</launch>

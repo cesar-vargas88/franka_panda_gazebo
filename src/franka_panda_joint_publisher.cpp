@@ -5,13 +5,11 @@
 
 int main(int argc, char **argv)
 {
-    std::vector<std::vector<float>> joint_position{ {0, 1, 0, -1},  // joint 1
-                                                    {0, 1, 0, -1},  // joint 2
-                                                    {0, 1, 0, -1},  // joint 3
-                                                    {0, 1, 0, -1},  // joint 4
-                                                    {0, 1, 0, -1},  // joint 5
-                                                    {0, 1, 0, -1},  // joint 6
-                                                    {0, 1, 0, -1}}; // joint 7
+    std::vector<std::vector<float>> joint_position{ {-0.40, 0.00, 0.00,-2.00, 0.00, 3.50, 0.00},  
+                                                    {-0.40, 0.00, 0.00,-2.00, 0.00, 2.50, 0.00},
+                                                    { 0.40, 0.00, 0.00,-2.00, 0.00, 2.50, 0.00},
+                                                    { 0.40, 0.00, 0.00,-2.00, 0.00, 3.50, 0.00}};
+
     std::vector<std_msgs::Float64> msg(7);
 
     ros::init(argc, argv, "franka_panda_joint_publisher");
@@ -30,25 +28,25 @@ int main(int argc, char **argv)
   
     while (ros::ok())
     {   
-        index < joint_position[0].size()-1 ? index++ : index = 0;
+        index < joint_position.size()-1 ? index++ : index = 0;
 
+        msg[0].data = joint_position[index][0];
+        joint1_position.publish(msg[0]);
+        msg[1].data = joint_position[index][1];
+        joint2_position.publish(msg[1]);
+        msg[2].data = joint_position[index][2];
+        joint3_position.publish(msg[2]);
+        msg[3].data = joint_position[index][3];
+        joint4_position.publish(msg[3]);
+        msg[4].data = joint_position[index][4];
+        joint5_position.publish(msg[4]);
+        msg[5].data = joint_position[index][5];
+        joint6_position.publish(msg[5]);
+        msg[6].data = joint_position[index][6];
+        joint7_position.publish(msg[6]);
+             
         ROS_INFO("Joint position: %f, %f, %f, %f, %f, %f, %f", msg[0].data, msg[1].data, msg[2].data, msg[3].data, msg[4].data, msg[5].data, msg[6].data);
  
-        msg[0].data = joint_position[0][index];
-        joint1_position.publish(msg[0]);
-        msg[1].data = joint_position[1][index];
-        joint2_position.publish(msg[1]);
-        msg[2].data = joint_position[2][index];
-        joint3_position.publish(msg[2]);
-        msg[3].data = joint_position[3][index];
-        joint4_position.publish(msg[3]);
-        msg[4].data = joint_position[4][index];
-        joint5_position.publish(msg[4]);
-        msg[5].data = joint_position[5][index];
-        joint6_position.publish(msg[5]);
-        msg[6].data = joint_position[6][index];
-        joint7_position.publish(msg[6]);
-        
         ros::spinOnce();
  
         loop_rate.sleep();

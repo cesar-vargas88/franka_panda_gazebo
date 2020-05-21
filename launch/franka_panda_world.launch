@@ -8,6 +8,17 @@
     <arg name="debug" default="false"/>
     <arg name="verbose" default="false"/>
 
+    <!-- This argument defines the workspace of the electrical gripper -->
+    <arg name="ns" default="panda"/>
+    <!-- This argument fixes the robot statically to the world -->
+    <arg name="static" default="true"/>
+    <!-- This argument dictates whether gazebo should be launched in this file -->
+    <arg name="load_gazebo" default="true"/>
+    <!-- This argument dictates if the gripper will be loaded -->
+    <arg name="load_gripper" default="false"/>
+    <!-- This argument dictates if the tool will be loaded -->
+    <arg name="load_tool" default="true"/>
+
     <!-- We resume the logic in empty_world.launch, changing the name of the world to be launched -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
 
@@ -21,11 +32,8 @@
 
     </include>
 
-    <!-- Load joint details configurations from YAML file to parameter server --> 
-    <!--rosparam command="load" file="$(find franka_panda_gazebo)/config/franka_panda_details.yaml"/-->
-
     <!-- Load the URDF into the ROS Parameter Server -->
-    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find franka_panda_description)/robots/panda_arm_hand.urdf.xacro' load_gazebo:=true"/>
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find franka_panda_description)/robots/panda_arm_hand.urdf.xacro' load_tool:=$(arg load_tool) load_gripper:=$(arg load_gripper) load_gazebo:=$(arg load_gazebo)"/>
     <!--param name="/arm/root_name" value="panda_link0"/-->
 
     <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
@@ -37,12 +45,16 @@
         args="-urdf -model panda -param robot_description"/>
 
     <!-- create a tf with base frame as 'base' (to match aml_robot) -->
-    <!--node pkg="tf" type="static_transform_publisher" name="base_to_link0" args="0 0 0 0 0 0 1 base panda_link0 100" /-->
+    <node pkg="tf" type="static_transform_publisher" name="base_to_link0" args="0 0 0 0 0 0 1 base panda_link0 100" />
 
     <!-- ros_control franka_panda_control launch file -->
-    <include file="$(find franka_panda_control)/launch/franka_panda_control.launch" /> 
+    <include file="$(find franka_panda_control)/launch/franka_panda_control.launch"> 
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="ns" value="$(arg ns)" />
+        <arg name="load_gripper" value="$(arg load_gripper)" />
+    </include>
 
     <!-- Launch visualization in rviz -->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find franka_panda_description)/config/franka_panda.rviz" required="true" />
+    <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find franka_panda_description)/config/franka_panda.rviz" required="true" /-->
 
 </launch>

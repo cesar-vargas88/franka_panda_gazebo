@@ -10,10 +10,10 @@
       <uri>model://sun</uri>
     </include>
 
-    <!--include>
-      <uri>/home/cesar/catkin_ws/src/panda_simulator/panda_gazebo/models/Box</uri>
-      <pose>0.19 0 0 0 0 0</pose>
-    </include-->
+    <include>
+      <uri>/home/cesar/aescape_catkin_ws/src/franka_panda_gazebo/models/human</uri>
+      <pose>2 0 0 0 0 0</pose>
+    </include>
     
     <physics type="ode">
       <real_time_update_rate>1000.0</real_time_update_rate>

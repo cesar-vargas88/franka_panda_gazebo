@@ -25,8 +25,7 @@
     <!--rosparam command="load" file="$(find franka_panda_gazebo)/config/franka_panda_details.yaml"/-->
 
     <!-- Load the URDF into the ROS Parameter Server -->
-    <param name="robot_description" 
-    command="$(find xacro)/xacro --inorder '$(find franka_panda_description)/robots/panda_arm_hand.urdf.xacro' load_gazebo:=true"/>
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find franka_panda_description)/robots/panda_arm_hand.urdf.xacro' load_gazebo:=true"/>
     <!--param name="/arm/root_name" value="panda_link0"/-->
 
     <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
@@ -41,6 +40,9 @@
     <!--node pkg="tf" type="static_transform_publisher" name="base_to_link0" args="0 0 0 0 0 0 1 base panda_link0 100" /-->
 
     <!-- ros_control franka_panda_control launch file -->
-    <!--include file="$(find franka_panda_control)/launch/franka_panda_control.launch" /--> 
+    <include file="$(find franka_panda_control)/launch/franka_panda_control.launch" /> 
+
+    <!-- Launch visualization in rviz -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find franka_panda_description)/config/franka_panda.rviz" required="true" />
 
 </launch>

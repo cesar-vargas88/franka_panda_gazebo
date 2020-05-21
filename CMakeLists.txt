@@ -206,3 +206,10 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(franka_panda_joint_subscriber src/franka_panda_joint_subscriber.cpp)
+target_link_libraries(franka_panda_joint_subscriber ${catkin_LIBRARIES} ${std_msgs_LIBRARIES})
+
+add_executable(franka_panda_joint_publisher src/franka_panda_joint_publisher.cpp)
+target_link_libraries(franka_panda_joint_publisher ${catkin_LIBRARIES} ${std_msgs_LIBRARIES})
+

@@ -45,14 +45,13 @@
         args="-urdf -model panda -param robot_description"/>
 
     <!-- create a tf with base frame as 'base' (to match aml_robot) -->
-    <node pkg="tf" type="static_transform_publisher" name="base_to_link0" args="0 0 0 0 0 0 1 base panda_link0 100" />
+    <!--node pkg="tf" type="static_transform_publisher" name="base_to_link0" args="0 0 0 0 0 0 1 base panda_link0 100" /-->
 
     <!-- ros_control franka_panda_control launch file -->
-    <include file="$(find franka_panda_control)/launch/franka_panda_control.launch"> 
-        <arg name="gui" value="$(arg gui)" />
+    <!--include file="$(find franka_panda_control)/launch/franka_panda_control.launch"> 
         <arg name="ns" value="$(arg ns)" />
         <arg name="load_gripper" value="$(arg load_gripper)" />
-    </include>
+    </include-->
 
     <!-- Launch visualization in rviz -->
     <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find franka_panda_description)/config/franka_panda.rviz" required="true" /-->
